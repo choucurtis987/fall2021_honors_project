@@ -24,9 +24,9 @@ class MyServer(SimpleHTTPRequestHandler):
                 self.shutter_open = False
         if self.path.find('curve?') >= 0 :
             self.wav = []
-            datfile = 'bkg.dat'
+            datfile = 'raw_bkg.dat'
             if self.shutter_open :
-                datfile = 'curve.dat'      
+                datfile = 'raw_sig.dat'      
             with open(datfile) as ff:
                 for line in ff: # read rest of lines
                     self.wav.append(int(line))
