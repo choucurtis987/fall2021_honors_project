@@ -11,10 +11,12 @@ t_wall = 0.0
 bl = np.sin(2*np.pi*2.0e3*t_wall)
 
 class MyServer(SimpleHTTPRequestHandler):
-    def __init__(self):
-        super().__init__(self)
-        self.shutter_open = False
+
     def do_GET(self):
+        # removed init and replaced with the two initial conditions below:
+        global t_wall
+        self.shutter_open = False
+
         bl = int(10.0*np.sin(2*np.pi*2.0e3*t_wall))
         t_wall = t_wall + 1.0/0.8e-7
         if self.path.find('SHUT') >= 0 :
@@ -24,12 +26,19 @@ class MyServer(SimpleHTTPRequestHandler):
                 self.shutter_open = False
         if self.path.find('curve?') >= 0 :
             self.wav = []
-            datfile = 'raw_bkg.dat'
+            datfile = 'Users/choucurtis987/Desktop/fall2021_honors_project/raw_bkg.dat'
             if self.shutter_open :
-                datfile = 'raw_sig.dat'      
+                datfile = 'Users/choucurtis987/Desktop/fall2021_honors_project/raw_sig.dat'
             with open(datfile) as ff:
+                # made changes here:
+                # probably more efficient way to convert list of numbers to int tho
                 for line in ff: # read rest of lines
-                    self.wav.append(int(line))
+                    # NOTE: i think last value in line is a '\n'
+                    line_2_int = [int(i) for i in line.split(',')[:-1]]
+                    print(line_2_int)
+                    for num in line_2_int:
+                        print(num)
+                        self.wav.append(num)
             sc = random.randint(0,2)
             msg = ''
             for sample in self.wav:
@@ -50,7 +59,7 @@ class MyServer(SimpleHTTPRequestHandler):
 
         time.sleep(1.0)
 
-if __name__ == "__main__":        
+if __name__ == "__main__":
     webServer = ThreadingHTTPServer((hostName, serverPort), MyServer)
     print("Server started http://%s:%s" % (hostName, serverPort))
 
@@ -61,5 +70,3 @@ if __name__ == "__main__":
 
     webServer.server_close()
     print("Server stopped.")
-
-
