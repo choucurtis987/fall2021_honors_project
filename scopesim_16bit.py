@@ -6,27 +6,30 @@ import random
 import numpy as np
 
 hostName = "localhost"
-serverPort = 5021
+serverPort = 5022
 t_wall = 0.0
-bl = np.sin(2*np.pi*2.0e3*t_wall)
+ct = 0
 
 class MyServer(SimpleHTTPRequestHandler):
     def do_GET(self):
-        bl = int(10.0*np.sin(2*np.pi*2.0e3*t_wall))
-        t_wall = t_wall + 1.0/0.8e-7
+        global t_wall
+        global ct
         if self.path.find('curve?') >= 0 :
             self.wav = []
             with open('curve.dat') as ff:
                 for line in ff: # read rest of lines
-                    val int(line)
+                    val = int(line)
                     val = val*256
-                    val = val + randint(-127,127)
+                    val = val + random.randint(-127,127)
                     self.wav.append(val)
             sc = random.randint(0,2)
             msg = ''
             for sample in self.wav:
+                t_wall = t_wall + 8.0e-7
+                bl = int(16384.0*np.sin(2*np.pi*2500.0*t_wall - ct*np.pi*0.75 ))
                 msg = msg + str(int(sample + sc + bl))
                 msg = msg + ','
+            ct = ct + 1
             msg = msg[:-1] + '\n'
             print(msg)
             self.send_response(200,message=None)
