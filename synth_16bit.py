@@ -4,6 +4,9 @@ import time
 
 import random
 import numpy as np
+import ROOT
+
+wavfit = ROOT.TF1('wavfit','0.5*[0]*TMath::Erfc((10.0-x)/[4])*TMath::Exp((x-10.0)/-[3]) - 0.5*[1]*TMath::Erfc((81.9-x)/[5])*TMath::Exp((x-10.0)/-[3])+[2]')
 
 hostName = "localhost"
 serverPort = 5022
@@ -27,10 +30,25 @@ class MyServer(SimpleHTTPRequestHandler):
                     self.wav.append(val)
             sc = random.randint(-1,1)
             msg = ''
-            for sample in self.wav:
+            lifetime = 415.5
+            deltaT = 81.9 - 10.0
+            exparg = deltaT/lifetime
+            downstroke = np.exp(-exparg)*46.685
+            wavfit.SetParameter(0,46.685)
+            wavfit.SetParameter(1,downstroke)
+            wavfit.SetParameter(2,40.235)
+            wavfit.FixParameter(3,395.3)
+            wavfit.FixParameter(4,1.0)
+            wavfit.FixParameter(5,2.9)
+            pre = '2;16;ASC;RP;MSB;500;"Ch1, AC coupling, 2.0E-2 V/div, 4.0E-5 s/div, 500 points, Average mode";Y;8.0E-7;0;-1.2E-4;"s";3.125E-6;0.0E0;-1.3824E4;"V"\n'
+            t = [ 1.0e6*(float(pre.split(';')[8])*float(i)+float(pre.split(';')[10])) for i in range(0,500) ]
+            for t_i in t:
                 t_wall = t_wall + 8.0e-7
                 bl = int(16384.0*np.sin(2*np.pi*2500.0*t_wall - ct*np.pi*0.75 ))
-                msg = msg + str(int((sample + sc + bl)))
+                millivolt = wavfit.Eval( t_i )
+                dl = float(wfmpre.split(';')[14]) + (millivolt/1.0e3 - float(wfmpre.split(';')[13]))/float(wfmpre.split(';')[12])
+                dl = int(dl) + random.randint(-127,127)
+                msg = msg + str(dl*(ct%2))
                 msg = msg + ','
             ct = ct + 1
             msg = msg[:-1] + '\n'
