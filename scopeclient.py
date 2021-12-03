@@ -41,12 +41,12 @@ class grafit(Frame):
             # print(f"volt: {len(volt)}")
 
             # find size of half of volt:
-            half = int( len(volt) / 2 )
-            # take max of (50 to half(volt)) and substract with min of 50 points before half(volt):
-            # we want 50 to half(volt) because max is at times in the beginning
-            # we want 50 points before half(volt) because the change should be so rapid that in the
-            # previous 50 points, there should be a min where the waveform shoots up after
-            peak = np.max(volt[50:half]) - np.min(volt[half-50:half])
+            # half = int( len(volt) / 2 )
+            volt_subset = volt[50:int(len(volt) / 2)]
+            max_index = np.argmax(volt_subset)
+            
+            peak = volt_subset[max_index] - np.min(volt_subset[max_index-50:max_index])
+
             timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
             self.xar.append((time.time() - start_time))
@@ -59,16 +59,16 @@ class grafit(Frame):
 
             # PLOTTTING PEAKS:
             plt.subplot(211)
-            plt.plot(self.xar, self.yar,'ro-')
-            plt.title("Amplitude vs Time")
-            plt.ylabel('Counts')
-            plt.xlabel('Sample')
+            plt.plot(self.xar, self.yar,'bo-')
+            plt.title("Millivolts vs Time(s)")
+            plt.ylabel('Millivolts')
+            plt.xlabel('Time (s)')
 
             # PLOTTING WAVEFORM:
             plt.subplot(212)
-            plt.plot(t,volt,'ro-', color='green')
+            plt.plot(t,volt,'go-')
             plt.title("Most recent waveform")
-            plt.ylabel("Volts")
+            plt.ylabel("MilliVolts")
             plt.xlabel(u"Time (\u03bcs)")
 
             plt.subplots_adjust(hspace=0.6, wspace=0.6)
@@ -81,10 +81,11 @@ class grafit(Frame):
             # self.plot_widget.grid(row=0, column=2)
 
             # WIDGET TO SEE MOST RECENT PEAK
-            T = Text(self.window, height = 5, width = 5)
+            T = Text(self.window, height = 1, width = 5, font=("Courier", 64))
             peak = round(peak, 1)
             T.insert(END, peak)
             T.grid(row=0, column=1)
+            T.config(foreground="blue")
 
 
             self.fig.canvas.draw_idle()
@@ -104,7 +105,7 @@ class grafit(Frame):
         self.cli_sock.connect((HOST,PORT))
         self.window = Tk()
 
-        self.window.title('Remote data')
+        self.window.title('Fiber Alignment Tool')
 #window.geometry("500x500")
         self.fig = plt.figure(1)
         self.fig.text(0.5,0.04,'LOADING...',ha ='center',va = 'center')
