@@ -5,7 +5,7 @@ This project relates to the computer science and physics fields. We will be buil
 
 # How to use the Fiber Alignment Tool
 1. The tool is located in [scopeclient.py](/scopeclient.py) file therefore download the file.
-2. You may need to change the address of where the client connects to the server. Therefore, if needed change the following lines to the proper address but keep with the same commands.
+2. You may need to change the address of where the client connects to the server. Therefore, if needed, change the following lines to the proper address but keep the same commands.
 ```python
 f = urllib.request.urlopen('http://localhost:5022/?COMMAND=curve?')
 f2 = urllib.request.urlopen('http://localhost:5022/?COMMAND=wfmpre?')
@@ -20,10 +20,10 @@ python3 scopeclient.py
 <img src="/example_GUI.png" width="500" height="300">
 
 - The top graph is a history of the waveform upstroke/peak size.
-  - **Waveform upstroke/peak** size is determined by creating a subset of the waveform consisting of values from the 50th value to the value located at the halfway point of the waveform. 
-  - We then find the max value of this subset giving us the highest point in the upstroke.
-  - We then check the previous 50 points starting from the highest point in the upstroke to find where the upstroke begins.
-  - With the max and min value of the upstroke, we subtract the min from the max to obtain our upstroke/peak size 
+  - **Waveform upstroke/peak** size is determined by creating a subset of the waveform consisting of values from the 50th value to the value located at the halfway point of the waveform. We begin the subset at the 50th point because there may be another max in the beginning of the waveform unrelated to the upstroke.
+  - We then find the max value of this subset giving us the highest point in the upstroke. 
+  - From the highest point in the upstroke, we then check its previous 50 points to find where the upstroke begins.
+  - With the max and min value of the upstroke, we subtract the min from the max to obtain our upstroke/peak size.
   - This process is shown in the code below:
 ```python
 volt_subset = volt[50:int(len(volt) / 2)]
@@ -34,5 +34,5 @@ peak = volt_subset[max_index] - np.min(volt_subset[max_index-50:max_index])
 - The bottom graph depicts the most recent waveform.
 
 # Future Directions
-- The current [scopeclient.py](/scopeclient.py) is not built to handle special cases such as a null waveform or a waveform consistently mostly of zeroes. This most likely causes issues in plotting. Working around this or building a case to handle it will make the code more robust.  
+- The current [scopeclient.py](/scopeclient.py) is not built to handle special cases such as a null waveform or a waveform consistently mostly of zeroes. This most likely causes issues in plotting resulting in an error. Working around this or building a case to handle it will make the code more robust.  
 - The way in which the peak is calculated can also be improved as our program assumes the highest value of the upstroke does not happen within the first 50 values of the waveform. Using derivatives or another technqiue may be more efficient. 
