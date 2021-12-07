@@ -81,13 +81,9 @@ class grafit(Frame):
 
 
     def __init__(self):
-        self.cli_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        HOST = 'localhost'
-        PORT = 5022
 
         self.xar = []
         self.yar = []
-        self.cli_sock.connect((HOST,PORT))
         self.window = Tk()
 
         # INITIAL GUI PAGE:
