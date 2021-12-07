@@ -36,3 +36,6 @@ peak = volt_subset[max_index] - np.min(volt_subset[max_index-50:max_index])
 # Future Directions
 - The current [scopeclient.py](/scopeclient.py) is not built to handle special cases such as a null waveform or a waveform consistently mostly of zeroes. This most likely causes issues in plotting resulting in an error. Working around this or building a case to handle it will make the code more robust.  
 - The way in which the peak is calculated can also be improved as our program assumes the highest value of the upstroke does not happen within the first 50 values of the waveform. Using derivatives or another technqiue may be more efficient. 
+
+# Works Cited
+# Acknowledgments 
