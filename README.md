@@ -38,4 +38,7 @@ peak = volt_subset[max_index] - np.min(volt_subset[max_index-50:max_index])
 - The way in which the peak is calculated can also be improved as our program assumes the highest value of the upstroke does not happen within the first 50 values of the waveform. Using derivatives or another technqiue may be more efficient. 
 
 # Works Cited
+- [Tkinter](https://docs.python.org/3/library/tk.html)
+- [Matplotlib](https://matplotlib.org/3.4.3/contents.html)
 # Acknowledgments 
+[scopeclient.py](/scopeclient.py) was created as collaboration between Curtis Chou and Kolo Wamba for Curtis' Fall 2021 Honors Project. A portion of the code that aided in plotting was created by Brendan Murtagh.
