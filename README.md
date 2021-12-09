@@ -41,4 +41,4 @@ peak = volt_subset[max_index] - np.min(volt_subset[max_index-50:max_index])
 - [Tkinter](https://docs.python.org/3/library/tk.html)
 - [Matplotlib](https://matplotlib.org/3.4.3/contents.html)
 # Acknowledgments 
-[scopeclient.py](/scopeclient.py) was created as collaboration between Curtis Chou and Kolo Wamba for Curtis' Fall 2021 Honors Project. A portion of the code that aided in plotting was created by Brendan Murtagh.
+[scopeclient.py](/scopeclient.py) was created as a collaboration between Curtis Chou and Kolo Wamba for Curtis' Fall 2021 Honors Project. A portion of the code that aided in plotting was created by Brendan Murtagh.
