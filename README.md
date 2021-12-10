@@ -19,6 +19,7 @@ python3 scopeclient.py
 <!-- ![Example GUI](/example_GUI.png) -->
 <img src="/example_GUI.png" width="500" height="300">
 
+- The bottom graph depicts the most recent waveform.
 - The top graph is a history of the waveform upstroke/peak size.
   - **Waveform upstroke/peak** size is determined by creating a subset of the waveform consisting of values until 50 microseconds. We end the subset at 50 microseconds because the upstoke generally occurs somewhere before that time.
   - We then find the max value of this subset giving us the highest point in the upstroke. 
@@ -42,7 +43,6 @@ python3 scopeclient.py
       print('max_index',str(max_index))
       print(volt_subset)
 ```
-- The bottom graph depicts the most recent waveform.
 
 # Future Directions
 - The way in which the peak is calculated can also be improved as our program assumes the upstroke occurs before 50 microseconds. Using derivatives or another technqiue may be more efficient to make peak calculation for robust for different situations. 
