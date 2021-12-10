@@ -45,7 +45,7 @@ python3 scopeclient.py
 ```
 
 # Future Directions
-- The way in which the peak is calculated can also be improved as our program assumes the upstroke occurs before 50 microseconds. Using derivatives or another technqiue may be more efficient to make peak calculation for robust for different situations. 
+- The way in which the peak is calculated can also be improved as our program assumes the upstroke occurs before 50 microseconds. Using derivatives or another technqiue may be more efficient to make peak calculation more robust for different situations. 
 
 # Works Cited
 - [Tkinter](https://docs.python.org/3/library/tk.html)
