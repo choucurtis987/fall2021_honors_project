@@ -20,22 +20,32 @@ python3 scopeclient.py
 <img src="/example_GUI.png" width="500" height="300">
 
 - The top graph is a history of the waveform upstroke/peak size.
-  - **Waveform upstroke/peak** size is determined by creating a subset of the waveform consisting of values from the 50th value to the value located at the halfway point of the waveform. We begin the subset at the 50th point because there may be another max in the beginning of the waveform unrelated to the upstroke.
+  - **Waveform upstroke/peak** size is determined by creating a subset of the waveform consisting of values until 50 microseconds. We end the subset at 50 microseconds because the upstoke generally occurs somewhere before that time.
   - We then find the max value of this subset giving us the highest point in the upstroke. 
-  - From the highest point in the upstroke, we then check its previous 50 points to find where the upstroke begins.
+  - From the highest point in the upstroke, we then check either previous 50 points or all previous points to find where the upstroke begins.
   - With the max and min value of the upstroke, we subtract the min from the max to obtain our upstroke/peak size.
   - This process is shown in the code below:
 ```python
-volt_subset = volt[50:int(len(volt) / 2)]
-max_index = np.argmax(volt_subset)
-
-peak = volt_subset[max_index] - np.min(volt_subset[max_index-50:max_index])
+  fiftymus = np.argmax( np.array(t) > 50.0 )
+  print("fiftymus: " , fiftymus)
+  # create subset of waveform with values up until 50us:
+  volt_subset = volt[:fiftymus]
+  max_index = np.argmax(volt_subset)
+  print("max index: ", max_index)
+  # search for minimum either 50 points back or less in the subset:
+  start = max_index - 50
+  print("start: ", start)
+  if start < 0 : start = 0
+  try :
+      peak = volt_subset[max_index] - np.min( np.array(volt_subset)[start:max_index] )
+  except ValueError:
+      print('max_index',str(max_index))
+      print(volt_subset)
 ```
 - The bottom graph depicts the most recent waveform.
 
 # Future Directions
-- The current [scopeclient.py](/scopeclient.py) is not built to handle special cases such as a null waveform or a waveform consistently mostly of zeroes. This most likely causes issues in plotting resulting in an error. Working around this or building a case to handle it will make the code more robust.  
-- The way in which the peak is calculated can also be improved as our program assumes the highest value of the upstroke does not happen within the first 50 values of the waveform. Using derivatives or another technqiue may be more efficient. 
+- The way in which the peak is calculated can also be improved as our program assumes the upstroke occurs before 50 microseconds. Using derivatives or another technqiue may be more efficient to make peak calculation for robust for different situations. 
 
 # Works Cited
 - [Tkinter](https://docs.python.org/3/library/tk.html)
